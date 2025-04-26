@@ -14,7 +14,7 @@ app.use(express.json());
 // Review route that uses the reviewController
 app.get("/api/reviews", reviewController.getReviews);
 
-app.listen(5000, () => {
+app.listen(3000, () => {
   console.log(`Server is running on http://localhost:${port}`);
 });
 
