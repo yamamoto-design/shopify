@@ -1,0 +1,32 @@
+[
+  {
+    "id": 1,
+    "rating": 5,
+    "title": "",
+    "body": "This exceeded all my expectations. Works perfectly!",
+    "author": "Michael",
+    "date": "2023-10-15",
+    "sentiment": "positive",
+    "flagged": [],
+    "response": {
+      "friendly": "Thank you for your kind words! We're thrilled you love it.",
+      "empathetic": "oppoip",
+      "bold": "d"
+    }
+  },
+  {
+    "id": 2,
+    "rating": 2,
+    "title": "",
+    "body": "Received a broken product, need refund ASAP",
+    "author": "Sarah",
+    "date": "2023-10-14",
+    "sentiment": "negative",
+    "flagged": ["broken", "refund"],
+    "response": {
+      "friendly": "Thank you for your kind words! We're thrilled you love it.",
+      "empathetic": "oppoip",
+      "bold": "d"
+    }
+  }
+]

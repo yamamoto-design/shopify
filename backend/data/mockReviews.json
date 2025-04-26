@@ -1,0 +1,29 @@
+[
+  {
+    "id": 1,
+    "product_id": 1,
+    "text": "I received the product damaged and it doesn’t work as expected. I tried reaching out but haven’t gotten a response. I’d like a full refund or a replacement ASAP. Not happy with the experience.",
+    "rating": 5,
+    "created_at": "2025-03-20"
+  },
+  {
+    "id": 2,
+    "product_id": 1,
+    "text": "Unfortunately, this lotion didn’t work for me. It felt greasy and didn’t absorb well. The scent was also too strong and gave me a headache. After a few tries, I had to stop using it. Disappointed, especially for the price.",
+    "rating": 3,
+    "created_at": "2025-03-18"
+  },
+  {
+    "id": 3,
+    "product_id": 2,
+    "text": "The lotion is okay. It moisturizes decently, but I've used better. The scent is mild, which I like, and it’s good for quick use throughout the day. Not bad, but not sure I'd go out of my way to buy it again.",
+    "created_at": "2025-03-15"
+  },
+  {
+    "id": 4,
+    "product_id": 2,
+    "text": "I received the product damaged and it doesn’t work as expected. I tried reaching out but haven’t gotten a response. I’d like a full refund or a replacement ASAP. Not happy with the experience.",
+    "rating": 5,
+    "created_at": "2025-03-10"
+  }
+]
