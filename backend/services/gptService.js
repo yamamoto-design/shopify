@@ -8,6 +8,7 @@ const openai = new OpenAI({
 
 const generateResponse = async (sentiment) => {
   try {
+    console.log("apikey:", process.env.OPENAI_API_KEY);
     let returnCompletion = [];
     let emotionArr = ["Friendly", "Empathetic", "Bold"];
     if (typeof sentiment !== "string" || !sentiment.trim()) {
