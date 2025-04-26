@@ -1,12 +1,15 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import axios from "axios";
 
+const backendURL = process.env.REACT_APP_BACKEND_URL || "http://localhost:5000";
+
 export const fetchRepliData = createAsyncThunk(
   "repli/fetchRepliData",
   async () => {
     try {
       const nameArr = ["Jack", "Danilo", "Maria", "John", "Alice", "Bob"];
-      const res = await axios.get("http://localhost:5000/api/reviews");
+      console.log("Fetching repli data from backend...", backendURL);
+      const res = await axios.get(backendURL + "/api/reviews");
       let response = res.data;
       console.log(response);
       let reviewArr = [];
