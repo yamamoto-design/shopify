@@ -7,9 +7,7 @@ import "../style/style.css";
 const RepliBot = () => {
   return (
     <>
-      <Header />
       <div className="replibot-container">
-        <Navbar />
         <ReplicabotReviewsList />
       </div>
     </>
