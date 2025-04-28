@@ -31,6 +31,8 @@ app.get("/auth", (req, res) => {
 // Step 2 & 3: Shopify Redirects Back -> Validate -> Exchange Code
 app.get("/auth/callback", async (req, res) => {
   const { shop, code, hmac, state } = req.query;
+  console.log(shop);
+  console.log("code:", code);
 
   if (!verifyHmac(req.query)) {
     return res.status(400).send("HMAC validation failed");
