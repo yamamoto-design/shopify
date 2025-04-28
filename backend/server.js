@@ -56,8 +56,13 @@ app.get("/auth/callback", async (req, res) => {
     // ⚡ Here you would save access_token in DB (for now we just send it)
     res.json({ access_token });
   } catch (error) {
-    console.error(error.response ? error.response.data : error.message);
-    res.status(500).send("Error exchanging code for access token");
+    if (error.response) {
+      console.error("Shopify Error:", error.response.data);
+      return res.status(500).json({ error: error.response.data });
+    } else {
+      console.error("Error:", error.message);
+      return res.status(500).json({ error: error.message });
+    }
   }
 });
 
