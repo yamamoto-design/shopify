@@ -4,6 +4,8 @@ const cors = require("cors");
 const reviewController = require("./controllers/reviewController.js");
 require("dotenv").config();
 
+const { generateAuthUrl, verifyHmac } = require("./shopify.js");
+
 const app = express();
 const port = 5000;
 const path = require("path");
@@ -16,35 +18,43 @@ app.use(
 app.use(express.json());
 app.use(express.static(path.join(process.cwd(), "frontend", "dist")));
 
-// Review route that uses the reviewController
-app.get("/api/reviews", reviewController.getReviews);
+// Step 1: Redirect to Shopify Authorization URL
+app.get("/auth", (req, res) => {
+  const { shop } = req.query;
+  if (!shop) {
+    return res.status(400).send("Missing shop parameter");
+  }
+  const redirectUrl = generateAuthUrl(shop);
+  res.redirect(redirectUrl);
+});
 
-app.post("/auth/callback", async (req, res) => {
-  const { code, state } = req.body;
+// Step 2 & 3: Shopify Redirects Back -> Validate -> Exchange Code
+app.get("/auth/callback", async (req, res) => {
+  const { shop, code, hmac, state } = req.query;
 
-  const client_id = process.env.SHOPIFY_API_KEY;
-  const client_secret = process.env.SHOPIFY_API_SECRET;
-  const redirect_uri = process.env.SHOPIFY_APP_URL + "/auth/callback";
+  if (!verifyHmac(req.query)) {
+    return res.status(400).send("HMAC validation failed");
+  }
 
   try {
+    const accessTokenRequestUrl = `https://${shop}/admin/oauth/access_token`;
+    const accessTokenPayload = {
+      client_id: process.env.SHOPIFY_API_KEY,
+      client_secret: process.env.SHOPIFY_API_SECRET,
+      code,
+    };
+
     const response = await axios.post(
-      `https://sentimenthug.myshopify.com/admin/oauth/access_token`,
-      {
-        client_id,
-        client_secret,
-        code,
-        redirect_uri,
-      }
+      accessTokenRequestUrl,
+      accessTokenPayload
     );
+    const { access_token } = response.data;
 
-    // Extract the access token from the response
-    const accessToken = response.data.access_token;
-
-    // Send the access token to the frontend
-    res.json({ access_token: accessToken });
+    // ⚡ Here you would save access_token in DB (for now we just send it)
+    res.json({ access_token });
   } catch (error) {
-    console.error("Error exchanging authorization code:", error);
-    res.status(500).json({ error: "Failed to exchange code for access token" });
+    console.error(error.response ? error.response.data : error.message);
+    res.status(500).send("Error exchanging code for access token");
   }
 });
 
@@ -52,7 +62,7 @@ app.listen(5000, () => {
   console.log(`Server is running on http://localhost:${port}`);
 });
 
-app.use(express.static(path.join(__dirname, "../frontend/build")));
-app.get("*", (req, res) => {
-  res.sendFile(path.join(__dirname, "../frontend/build/index.html"));
-});
+// app.use(express.static(path.join(__dirname, "../frontend/build")));
+// app.get("*", (req, res) => {
+//   res.sendFile(path.join(__dirname, "../frontend/build/index.html"));
+// });

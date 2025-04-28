@@ -14,7 +14,7 @@ import GenerateReviewComponent from "./components/GenerateReviewComponent";
 // import Dashboard from "./pages/Dashboard";
 import RepliBot from "./pages/RepliBot";
 import RealReview from "./pages/RealReview";
-import ShopifyLogin from "./pages/ShopifyLogin";
+import InstallButton from "./pages/InstallButton";
 
 function App() {
   const shop = process.env.REACT_APP_SHOPIFY_SHOP_NAME;
@@ -30,7 +30,7 @@ function App() {
         <Frame>
           <Routes>
             <Route path="/" element={<Navigate to="/login" replace />} />
-            <Route path="/login" element={<ShopifyLogin />} />
+            <Route path="/login" element={<InstallButton />} />
             <Route path="/republic" element={<RepliBot />} />
             <Route path="/realreview" element={<RealReview />}>
               <Route path=":id" element={<RealReviewComponent />} />
