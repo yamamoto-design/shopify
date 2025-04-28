@@ -1,23 +1,33 @@
 // src/components/InstallButton.tsx
-import React from "react";
-import { useState } from "react";
+import React, { useState } from "react";
+import "../style/InstallButton.css"; // Import the CSS file
 
 const InstallButton = () => {
-  const [shop, setShop] = useState("");
+  const [shop, setShop] = useState("sentimenthug.myshopify.com");
 
   const handleInstall = () => {
+    if (!shop) {
+      alert("Please enter your Shopify store URL!");
+      return;
+    }
     window.location.href = `/auth?shop=${shop}`;
   };
 
   return (
-    <div>
-      <input
-        type="text"
-        placeholder="your-store.myshopify.com"
-        value={shop}
-        onChange={(e) => setShop(e.target.value)}
-      />
-      <button onClick={handleInstall}>Install Shopify App</button>
+    <div className="install-container">
+      <div className="install-card">
+        <h1 className="install-title">Install Your Shopify App</h1>
+        <input
+          type="text"
+          placeholder="sentimenthug.myshopify.com"
+          value={shop}
+          onChange={(e) => setShop(e.target.value)}
+          className="install-input"
+        />
+        <button onClick={handleInstall} className="install-button">
+          Install App && Login
+        </button>
+      </div>
     </div>
   );
 };

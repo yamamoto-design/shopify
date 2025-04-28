@@ -55,7 +55,10 @@ app.get("/auth/callback", async (req, res) => {
     const { access_token } = response.data;
 
     // ⚡ Here you would save access_token in DB (for now we just send it)
-    res.json({ access_token });
+    // res.json({ access_token });
+
+    const FRONTEND_URL = process.env.FRONTEND_URL || "http://localhost:3000";
+    res.redirect(`${FRONTEND_URL}/republic`);
   } catch (error) {
     if (error.response) {
       console.error("Shopify Error:", error.response.data);

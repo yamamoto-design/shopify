@@ -6,9 +6,7 @@ import "../style/style.css";
 const RealReview = () => {
   return (
     <>
-      <Header />
       <div className="replibot-container">
-        <Navbar />
         <Outlet />
       </div>
     </>
