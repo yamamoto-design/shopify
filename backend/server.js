@@ -30,6 +30,7 @@ app.get("/auth", (req, res) => {
 
 // Step 2 & 3: Shopify Redirects Back -> Validate -> Exchange Code
 app.get("/auth/callback", async (req, res) => {
+  console.log("Callback received from Shopify");
   const { shop, code, hmac, state } = req.query;
   console.log(shop);
   console.log("code:", code);
