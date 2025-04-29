@@ -15,13 +15,12 @@ import RealReview from "./pages/RealReview";
 import InstallButton from "./pages/InstallButton";
 
 function App() {
-
   return (
     <AppProvider i18n={enTranslations}>
       <Router>
         <Frame>
           <Routes>
-            <Route path="/" element={<Navigate to="/republic" replace />} />
+            <Route path="/" element={<Navigate to="/login" replace />} />
             <Route path="/login" element={<InstallButton />} />
             <Route path="/republic" element={<RepliBot />} />
             <Route path="/realreview" element={<RealReview />}>
