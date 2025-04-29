@@ -1,5 +1,6 @@
 // backend/controllers/reviewController.js
-const sentimentService = require("../services/sentimentService.js");
+// const sentimentService = require("../services/sentimentService.js");
+const { analyzeSentiment } = require("../services/sentimentService");
 const shopifyService = require("../services/shopifyService.js");
 const gptService = require("../services/gptService.js");
 const fs = require("fs");
@@ -29,8 +30,15 @@ const getReviews = async (req, res) => {
     const reviews = getMockReviews();
     const reviewsWithSentiments = await Promise.all(
       reviews.map(async (review) => {
-        const sentiment = await sentimentService.analyzeSentiment(review.text);
-        const response = await gptService.generateResponse(sentiment);
+        // const sentiment = await sentimentService.analyzeSentiment(review.text);
+        const sentiment = await analyzeSentiment(review.text);
+        console.log(
+          "sentiment",
+          sentiment[0] === "P" ? "POSITIVE" : "NEGATIVE"
+        );
+        const response = await gptService.generateResponse(
+          sentiment[0] === "P" ? "POSITIVE" : "NEGATIVE"
+        );
         const refund = flagReview(review.text);
         return {
           id: review.id,

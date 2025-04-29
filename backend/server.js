@@ -70,11 +70,13 @@ app.get("/auth/callback", async (req, res) => {
   }
 });
 
+app.get("/api/reviews", reviewController.getReviews);
+
 app.listen(5000, () => {
   console.log(`Server is running on http://localhost:${port}`);
 });
 
-app.use(express.static(path.join(__dirname, "../frontend/build")));
-app.get("*", (req, res) => {
-  res.sendFile(path.join(__dirname, "../frontend/build/index.html"));
-});
+// app.use(express.static(path.join(__dirname, "../frontend/build")));
+// app.get("*", (req, res) => {
+//   res.sendFile(path.join(__dirname, "../frontend/build/index.html"));
+// });

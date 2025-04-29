@@ -1,6 +1,5 @@
-// src/components/InstallButton.tsx
 import React, { useState } from "react";
-import "../style/InstallButton.css"; // Import the CSS file
+import "../style/InstallButton.css";
 
 const InstallButton = () => {
   const [shop, setShop] = useState("sentimenthug.myshopify.com");

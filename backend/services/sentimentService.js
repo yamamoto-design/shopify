@@ -1,28 +1,41 @@
 // backend/services/sentimentService.js
-const fetch = require("node-fetch");
-require("dotenv").config();
+const { pipeline } = require("@xenova/transformers");
 
-const HUGGINGFACE_API_KEY = process.env.HUGGINGFACE_API_KEY;
+// Variable to hold the sentiment pipeline
+let sentimentPipeline;
+let isModelLoaded = false; // Flag to track model loading state
 
-const analyzeSentiment = async (reviewText) => {
+// Load the model asynchronously
+async function loadModel() {
   try {
-    const response = await fetch(
-      "https://api-inference.huggingface.co/models/distilbert-base-uncased-finetuned-sst-2-english",
-      {
-        method: "POST",
-        headers: {
-          Authorization: `Bearer ${HUGGINGFACE_API_KEY}`,
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({ inputs: reviewText }),
-      }
-    );
-    const data = await response.json();
-    return data[0][0].label; // Assuming "label" is the sentiment (e.g., "POSITIVE", "NEGATIVE")
+    sentimentPipeline = await pipeline("sentiment-analysis");
+    isModelLoaded = true; // Set the flag to true once the model is loaded
+    console.log("Sentiment model loaded successfully");
+  } catch (error) {
+    console.error("Error loading sentiment model:", error);
+    throw new Error("Failed to load sentiment model");
+  }
+}
+
+// Call this once in your app's initialization phase (make sure it's called before the server starts processing requests)
+loadModel();
+
+// The function to analyze sentiment
+async function analyzeSentiment(reviewText) {
+  try {
+    // Ensure model is loaded before proceeding
+    if (!isModelLoaded) {
+      console.log("Model is not loaded yet. Please wait.");
+      throw new Error("Sentiment model not loaded yet");
+    }
+
+    const output = await sentimentPipeline(reviewText);
+    console.log("Sentiment output:", output);
+    return output[0].label; // e.g., "POSITIVE", "NEGATIVE"
   } catch (error) {
     console.error("Error analyzing sentiment:", error);
     throw new Error("Sentiment analysis failed");
   }
-};
+}
 
 module.exports = { analyzeSentiment };
