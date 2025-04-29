@@ -20,7 +20,7 @@ function App() {
       <Router>
         <Frame>
           <Routes>
-            <Route path="/" element={<Navigate to="/login" replace />} />
+            <Route path="/" element={<Navigate to="/republic" replace />} />
             <Route path="/login" element={<InstallButton />} />
             <Route path="/republic" element={<RepliBot />} />
             <Route path="/realreview" element={<RealReview />}>
