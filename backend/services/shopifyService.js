@@ -1,32 +1,77 @@
-// backend/services/shopifyService.js
 const axios = require("axios");
 
-require("dotenv").config();
-const SHOPIFY_API_KEY = process.env.SHOPIFY_API_KEY;
-const SHOPIFY_PASSWORD = process.env.SHOPIFY_PASSWORD;
-const SHOPIFY_DOMAIN = process.env.SHOPIFY_DOMAIN;
+async function getAllProductIds(shop, accessToken) {
+  const response = await axios.get(
+    `https://${shop}/admin/api/2024-01/products.json`,
+    {
+      headers: {
+        "X-Shopify-Access-Token": accessToken,
+      },
+      params: {
+        limit: 50, // Max per page
+      },
+    }
+  );
 
-const fetchShopifyReviews = async () => {
-  try {
-    const response = await axios.get(
-      `https://${SHOPIFY_DOMAIN}/admin/api/2021-04/products.json`,
-      {
-        auth: {
-          username: SHOPIFY_API_KEY,
-          password: SHOPIFY_PASSWORD,
-        },
-      }
-    );
+  const products = response.data.products;
+  const productIds = products.map((product) => ({
+    id: product.id,
+    title: product.title,
+  }));
 
-    // Replace this with the actual Shopify reviews data.
-    return response.data.products.map((product) => ({
-      id: product.id,
-      text: product.title, // Adjust as per your Shopify response structure
+  return productIds;
+}
+
+async function createReviewMetafield(shop, accessToken, productId, review) {
+  const metafield = {
+    metafield: {
+      namespace: "reviews",
+      key: `review_${Date.now()}`,
+      type: "json",
+      value: JSON.stringify({
+        author: review.author,
+        content: review.content,
+        rating: review.rating,
+        createdAt: new Date().toISOString(),
+      }),
+    },
+  };
+
+  const res = await axios.post(
+    `https://${shop}/admin/api/2024-01/products/${productId}/metafields.json`,
+    metafield,
+    {
+      headers: {
+        "X-Shopify-Access-Token": accessToken,
+        "Content-Type": "application/json",
+      },
+    }
+  );
+
+  return res.data.metafield;
+}
+
+async function getProductReviewMetafields(shop, accessToken, productId) {
+  const res = await axios.get(
+    `https://${shop}/admin/api/2024-01/products/${productId}/metafields.json`,
+    {
+      headers: {
+        "X-Shopify-Access-Token": accessToken,
+      },
+    }
+  );
+
+  return res.data.metafields
+    .filter((mf) => mf.namespace === "reviews")
+    .map((mf) => ({
+      id: mf.id,
+      value: JSON.parse(mf.value),
+      createdAt: mf.created_at,
     }));
-  } catch (error) {
-    console.error("Error fetching reviews:", error);
-    throw new Error("Failed to fetch Shopify reviews");
-  }
-};
+}
 
-module.exports = { fetchShopifyReviews };
+module.exports = {
+  getAllProductIds,
+  createReviewMetafield,
+  getProductReviewMetafields,
+};

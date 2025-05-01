@@ -7,9 +7,13 @@ require("dotenv").config();
 
 const { generateAuthUrl, verifyHmac } = require("./shopify.js");
 
+const { getAllProductIds } = require("./services/shopifyService.js");
+
 const app = express();
 const port = 5000;
 const path = require("path");
+
+let token = "";
 
 app.use(
   cors({
@@ -53,7 +57,10 @@ app.get("/auth/callback", async (req, res) => {
       accessTokenPayload
     );
     const { access_token } = response.data;
+    token = access_token;
+    console.log("Access Token:", access_token);
 
+    console.log(getAllProductIds(shop, access_token));
     // ⚡ Here you would save access_token in DB (for now we just send it)
     // res.json({ access_token });
 
